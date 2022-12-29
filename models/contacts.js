@@ -25,7 +25,6 @@ const getContactById = async (contactId) => {
 
 const removeContact = async (contactId) => {
   let isExist = false;
-
   try {
     const data = await fs.readFile(dbPath, "utf-8");
     const newContacts = JSON.parse(data).filter((el) => {
@@ -37,7 +36,7 @@ const removeContact = async (contactId) => {
     if (!isExist) {
       return;
     }
-    fs.writeFile(dbPath, JSON.stringify(newContacts));
+    await fs.writeFile(dbPath, JSON.stringify(newContacts));
     return contactId;
   } catch (error) {
     console.log(error);
@@ -59,7 +58,7 @@ const addContact = async (body) => {
   try {
     const data = await fs.readFile(dbPath, "utf-8");
     const newContacts = [...JSON.parse(data), contact];
-    fs.writeFile(dbPath, JSON.stringify(newContacts));
+    await fs.writeFile(dbPath, JSON.stringify(newContacts));
     return contact;
   } catch (error) {
     console.log(error);
@@ -79,7 +78,6 @@ const updateContact = async (contactId, body) => {
   if (!isValid) {
     return;
   }
-
   try {
     const data = await fs.readFile(dbPath, "utf-8");
     const newContacts = JSON.parse(data).map((el) => {
