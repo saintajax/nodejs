@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/contacts", listContacts);
 router.get("/contacts/:id", findContactsById);
 router.post("/contacts", createContact);
-router.put("/contacts/:id/favorite", updateOneContact);
+router.patch("/contacts/:id/favorite", updateOneContact);
 router.put("/contacts/:id", updateOneContact);
 router.delete("/contacts/:id", deleteContact);
 
