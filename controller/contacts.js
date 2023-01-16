@@ -2,8 +2,9 @@ const service = require("../service/contacts");
 
 const listContacts = async (req, res, next) => {
   const { _id } = req.user;
+  const { skip = 0, limit = 5 } = req.query;
   try {
-    const contacts = await service.getAllContacts(_id);
+    const contacts = await service.getAllContacts(_id, { skip, limit });
     res.json({
       status: "success",
       code: 200,
