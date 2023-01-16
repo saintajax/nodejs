@@ -5,11 +5,41 @@ const mongoose = require("mongoose");
 
 require("dotenv").config();
 
-const routerApi = require("./api");
+const contactsRouter = require("./api/contacts");
+const authRouter = require("./api/user");
 
 const app = express();
 
-app.use(logger("dev")).use(cors()).use(express.json()).use("/api", routerApi);
+app
+  .use(logger("dev"))
+  .use(cors())
+  .use(express.json())
+  .use("/api/contacts", contactsRouter)
+  .use("/api/auth", authRouter);
+
+require("./config/config-passport");
+
+app.use((_, res, __) => {
+  res.status(404).json({
+    status: "error",
+    code: 404,
+    message: `Use api on routes: 
+    /api/registration - registration user {username, email, password}
+    /api/login - login {email, password}
+    /api/list - get message if user is authenticated`,
+    data: "Not found",
+  });
+});
+
+app.use((err, _, res, __) => {
+  console.log(err.stack);
+  res.status(500).json({
+    status: "fail",
+    code: 500,
+    message: err.message,
+    data: "Internal Server Error",
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 const uriDb = process.env.DB_HOST;
