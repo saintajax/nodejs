@@ -93,6 +93,7 @@ const updateOneContact = async (req, res, next) => {
 
 const updateFavorit = async (req, res, next) => {
   const { id } = req.params;
+  const { _id } = req.user;
   const favorite = req.body;
   if (!favorite) {
     res.json({
@@ -102,7 +103,7 @@ const updateFavorit = async (req, res, next) => {
     });
   }
   try {
-    const updatedContact = await service.updateContact(id, newContact);
+    const updatedContact = await service.updateContact(id, newContact, _id);
     if (updatedContact) {
       res.json({
         status: "success",
