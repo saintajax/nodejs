@@ -4,8 +4,9 @@ const getAllContacts = (owner) => {
   return Contact.find({ owner }).populate("owner");
 };
 
-const getContactById = (id) => {
-  return Contact.findOne({ _id: id });
+const getContactById = (id, owner) => {
+  console.log(owner);
+  return Contact.findOne({ _id: id, owner });
 };
 
 const createContact = ({
@@ -18,12 +19,12 @@ const createContact = ({
   return Contact.create(newContact);
 };
 
-const updateContact = (id, fields) => {
-  return Contact.findByIdAndUpdate({ _id: id }, fields, { new: true });
+const updateContact = (id, fields, owner) => {
+  return Contact.findOneAndUpdate({ _id: id, owner }, fields, { new: true });
 };
 
-const removeContact = (id) => {
-  return Contact.findByIdAndRemove({ _id: id });
+const removeContact = (id, owner) => {
+  return Contact.findOneAndDelete({ _id: id, owner });
 };
 
 module.exports = {
