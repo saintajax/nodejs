@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const SchemaTypes = require("mongoose");
 
 const contactSchema = new mongoose.Schema({
   name: {
@@ -15,6 +16,10 @@ const contactSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
     required: [true, "missing field favorite"],
+  },
+  owner: {
+    type: SchemaTypes.ObjectId,
+    ref: "user",
   },
 });
 
