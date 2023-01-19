@@ -1,12 +1,13 @@
 // const service = require("../service/users");
 const jwt = require("jsonwebtoken");
 const { User } = require("../service/schemas/users");
+const { findUser, saveUser } = require("../service/users");
 require("dotenv").config();
 const { SECRET_KEY } = process.env;
 
 const registrationController = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const user = await findUser(email);
   if (user) {
     return res.status(409).json({
       status: "error",
@@ -18,8 +19,8 @@ const registrationController = async (req, res, next) => {
   try {
     const newUser = new User({ email });
     newUser.setPassword(password);
-    await newUser.save();
-    console.log(newUser);
+    newUser.setAvatar(email);
+    await saveUser(newUser);
     res.status(201).json({
       status: "Created",
       code: 201,
@@ -37,8 +38,7 @@ const registrationController = async (req, res, next) => {
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
+  const user = await findUser(email);
   if (!user || !user.validPassword(password)) {
     return res.status(401).json({
       status: "error",

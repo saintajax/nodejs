@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const path = require("path");
+
+const STATIC_DIR = path.resolve("./public");
 
 require("dotenv").config();
 
@@ -15,7 +18,8 @@ app
   .use(cors())
   .use(express.json())
   .use("/api/contacts", contactsRouter)
-  .use("/api/auth", authRouter);
+  .use("/api/auth", authRouter)
+  .use("/avatars", express.static(`${STATIC_DIR}/avatars`));
 
 require("./config/config-passport");
 

@@ -1,11 +1,12 @@
-const User = require("./schemas/users");
+const { User } = require("./schemas/users");
 
-const registration = async (email, password) => {
-  const user = new User({ email, password });
-  console.log(user.methods.setPassword);
-  //   await user.save();
+const findUser = async (email) => {
+  const user = await User.findOne({ email });
+  return user;
 };
 
-const login = () => {};
+const saveUser = async (user) => {
+  await user.save();
+};
 
-module.exports = { registration, login };
+module.exports = { findUser, saveUser };
