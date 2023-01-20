@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 const bCrypt = require("bcrypt");
+const gravatar = require("gravatar");
 
 const userSchema = new mongoose.Schema({
   password: {
@@ -17,6 +18,7 @@ const userSchema = new mongoose.Schema({
     enum: ["starter", "pro", "business"],
     default: "starter",
   },
+  avatarURL: String,
   token: String,
 });
 
@@ -28,21 +30,9 @@ userSchema.methods.validPassword = function (password) {
   return bCrypt.compareSync(password, this.password);
 };
 
-// userSchema.methods.joiValidate = function (obj) {
-//   const schema = {
-//     email: Joi.string()
-//       .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
-//       .required(),
-//     password: Joi.string().min(6).required(),
-//     subscription: Joi.string().messages({
-//       "string.base": `"subscription" should be a type of 'text'`,
-//       "string.empty": `"subscription" cannot be an empty field`,
-//       "any.required": `"subscription" is a required field`,
-//     }),
-//     token: Joi.string(),
-//   };
-//   return schema.validate(obj, schema);
-// };
+userSchema.methods.setAvatar = function (email) {
+  this.avatarURL = gravatar.url(email);
+};
 
 const validateUser = (user) => {
   const schema = Joi.object({
@@ -55,43 +45,11 @@ const validateUser = (user) => {
       "string.empty": `"subscription" cannot be an empty field`,
       "any.required": `"subscription" is a required field`,
     }),
+    avatarURL: Joi.string(),
     token: Joi.string(),
   });
   return schema.validate(user);
 };
-
-// const registerSchema = Joi.object({
-//   email: Joi.string()
-//     .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
-//     .required(),
-//   password: Joi.string().min(6).required(),
-// });
-
-// const loginSchema = Joi.object({
-//   email: Joi.string()
-//     .pattern(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/)
-//     .required(),
-//   password: Joi.string().min(6).required(),
-// });
-
-// const refreshSchema = Joi.object({
-//   refreshToken: Joi.string().required(),
-// });
-
-// const updateSubscriptionSchema = Joi.object({
-//   subscription: Joi.string().required().messages({
-//     "string.base": `"subscription" should be a type of 'text'`,
-//     "string.empty": `"subscription" cannot be an empty field`,
-//     "any.required": `"subscription" is a required field`,
-//   }),
-// });
-
-// const schemas = {
-//   registerSchema,
-//   loginSchema,
-//   refreshSchema,
-//   updateSubscriptionSchema,
-// };
 
 const User = new mongoose.model("user", userSchema);
 
