@@ -15,14 +15,6 @@ const uploadController = async (req, res, next) => {
   const fileName = path.join(storeImage, filename);
   try {
     const { id } = jwt.verify(token, SECRET_KEY);
-    const user = await User.findById(id);
-    if (user.token !== token || user.token === "") {
-      return res.status(401).json({
-        status: "error",
-        code: 401,
-        message: "Not authorized",
-      });
-    }
     Jimp.read(temporaryName, (err, avatar) => {
       if (err) throw err;
       avatar.resize(250, 250).quality(60).write(fileName);
