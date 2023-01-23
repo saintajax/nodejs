@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../service/schemas/users");
-const sendEmail = require("../helpers/sendEmail");
+const { sendEmail } = require("../helpers/sendEmailNE");
 const {
   findUser,
   saveUser,
@@ -30,8 +30,8 @@ const registrationController = async (req, res, next) => {
     const msg = {
       to: email,
       subject: "Thank for registration",
-      text: `Please confirm your email. Send GET request to http://localhost:3000/api/auth/verify/${verifyToken}`,
-      html: `<a target="_blank" href="http://localhost:3000/api/auth/verify/${verifyToken}">Please confirm your email</a>`,
+      text: `Please confirm your email. Send GET request to http://localhost:7777/api/auth/verify/${verifyToken}`,
+      html: `<a target="_blank" href="http://localhost:7777/api/auth/verify/${verifyToken}">Please confirm your email</a>`,
     };
     await sendEmail(msg);
 
