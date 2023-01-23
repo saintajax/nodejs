@@ -5,7 +5,6 @@ const getAllContacts = (owner, { skip, limit }) => {
 };
 
 const getContactById = (id, owner) => {
-  console.log(owner);
   return Contact.findOne({ _id: id, owner });
 };
 

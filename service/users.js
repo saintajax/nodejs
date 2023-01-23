@@ -9,4 +9,15 @@ const saveUser = async (user) => {
   await user.save();
 };
 
-module.exports = { findUser, saveUser };
+const registrationConfirmation = async (verificationToken) => {
+  const user = await User.findOneAndUpdate(
+    { verificationToken },
+    {
+      verificationToken: null,
+      verify: true,
+    }
+  );
+  return user;
+};
+
+module.exports = { findUser, saveUser, registrationConfirmation };
