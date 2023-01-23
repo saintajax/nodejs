@@ -10,6 +10,8 @@ const {
   loginController,
   logoutController,
   getCurrentController,
+  registrationConfirmationController,
+  resendEmail,
 } = require("../controller/users");
 const { uploadController } = require("../controller/files");
 
@@ -33,6 +35,7 @@ router.post(
   [validateMiddleWare(validateUser)],
   registrationController
 );
+router.get("/verify/:verificationToken", registrationConfirmationController);
 router.post("/login", [validateMiddleWare(validateUser)], loginController);
 router.post("/logout", auth, logoutController);
 router.get("/current", auth, getCurrentController);
@@ -41,5 +44,6 @@ router.patch(
   [auth, uploadMiddleware.single("avatar")],
   uploadController
 );
+router.post("/verify", resendEmail);
 
 module.exports = router;

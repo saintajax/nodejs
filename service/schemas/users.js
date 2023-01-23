@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 const bCrypt = require("bcrypt");
 const gravatar = require("gravatar");
+const { v4: uuidv4 } = require("uuid");
 
 const userSchema = new mongoose.Schema({
   password: {
@@ -17,6 +18,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ["starter", "pro", "business"],
     default: "starter",
+  },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    // required: [true, "Verify token is required"],
   },
   avatarURL: String,
   token: String,
@@ -34,6 +43,11 @@ userSchema.methods.setAvatar = function (email) {
   this.avatarURL = gravatar.url(email);
 };
 
+userSchema.methods.setVerifyToken = function () {
+  this.verificationToken = uuidv4();
+  return this.verificationToken;
+};
+
 const validateUser = (user) => {
   const schema = Joi.object({
     email: Joi.string()
@@ -45,6 +59,8 @@ const validateUser = (user) => {
       "string.empty": `"subscription" cannot be an empty field`,
       "any.required": `"subscription" is a required field`,
     }),
+    verify: Joi.bool(),
+    verificationToken: Joi.string(),
     avatarURL: Joi.string(),
     token: Joi.string(),
   });
